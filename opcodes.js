@@ -1,3 +1,4 @@
 module.exports = {
-    LOGIN: 1
+    LOGIN: 1,
+    LOGIN_RESULT: 2
 };

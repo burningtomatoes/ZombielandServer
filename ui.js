@@ -1,5 +1,3 @@
-var config = require('./config.js');
-
 module.exports = {
     printWelcome: function () {
         console.log('');

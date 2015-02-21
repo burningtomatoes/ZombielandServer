@@ -1,7 +1,9 @@
-var ui = require('./ui.js');
-var net = require('./net.js');
-var config = require('./config.js');
-var db = require('./db.js');
+GLOBAL.ui = require('./ui.js');
+GLOBAL.net = require('./net.js');
+GLOBAL.config = require('./config.js');
+GLOBAL.db = require('./db.js');
+GLOBAL.router = require('./router.js');
+GLOBAL.opcodes = require('./opcodes.js');
 
 ui.printWelcome();
 db.connect();

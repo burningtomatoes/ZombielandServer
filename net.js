@@ -1,9 +1,6 @@
 var nodeStatic = require('node-static');
 var http = require('http');
 var file = new (nodeStatic.Server)();
-var ui = require('./ui.js');
-var config = require('./config.js');
-var router = require('./router.js');
 
 module.exports = {
     app: null,
@@ -32,7 +29,7 @@ module.exports = {
         return this.idGenerator++;
     },
 
-    broadcast: function (op, data, source) {
+    broadcast: function (data, source) {
         for (var i = 0; i < this.connections.length; i++) {
             var connection = this.connections[i];
 
@@ -41,17 +38,17 @@ module.exports = {
             }
 
             try {
-                connection.emit(op, data);
+                connection.emit('data', data);
             } catch (e) { }
         }
     },
 
-    sendTo: function (connectionId, op, data) {
+    sendTo: function (connectionId, data) {
         for (var i = 0; i < this.connections.length; i++) {
             var connection = this.connections[i];
 
             if (connection.id === connectionId) {
-                connection.emit(op, data);
+                connection.emit('data', data);
                 break;
             }
         }

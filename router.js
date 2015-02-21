@@ -1,7 +1,4 @@
-var opcodes = require('./opcodes.js');
-var ui = require('./ui.js');
-
-var router = module.exports = {
+module.exports = {
     handlers: {},
 
     register: function (op, handler) {
@@ -28,6 +25,8 @@ var router = module.exports = {
     }
 };
 
-router.register(opcodes.LOGIN, function (connection, data) {
-    console.log('LOGIN ATTEMPT FROM ' + data.username + ' / ' + data.password);
+var normalizedPath = require("path").join(__dirname, "handlers");
+
+require("fs").readdirSync(normalizedPath).forEach(function(file) {
+    require("./handlers/" + file);
 });
