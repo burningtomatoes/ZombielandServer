@@ -18,6 +18,11 @@ module.exports = {
             return;
         }
 
+        if (data.op != opcodes.LOGIN && !connection.authenticated) {
+            ui.writeLog('Refusing to process opcode ' + data.op + ' without an authenticated connection.');
+            return;
+        }
+
         if (typeof this.handlers[data.op] != 'undefined') {
             var handlerFn = this.handlers[data.op];
             handlerFn(connection, data);
