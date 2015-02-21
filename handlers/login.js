@@ -24,6 +24,10 @@ var Login = {
     },
 
     handleLogin: function (connection, data) {
+        if (connection.authenticated) {
+            return;
+        }
+
         var username = data.username;
         var password = data.password;
 
