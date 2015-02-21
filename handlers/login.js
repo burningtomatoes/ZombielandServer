@@ -28,7 +28,7 @@ var Login = {
             return;
         }
 
-        var username = data.username;
+        var username = data.username.trim();
         var password = data.password;
 
         if (username == null || password == null || username.length < 0 || username.length > 16 || password.length != 40) {
@@ -42,7 +42,7 @@ var Login = {
                 var user = result[0];
 
                 if (user.password !== password) {
-                    Login.sendErrorResponse(connection, 'Invalid password.');
+                    Login.sendErrorResponse(connection, 'Invalid password; this name is already registered.');
                     return;
                 }
 
