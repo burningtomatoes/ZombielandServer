@@ -85,8 +85,8 @@ module.exports = {
 
             // If we have found it, then remove it from our collection.
             if (idx >= 0) {
-                ui.writeLog('Connection ' + connection.id + ' has closed.');
-                this.connections.splice(idx, connection);
+                ui.writeLog('Connection ' + connection.id + ' has closed [splice ' + idx + '].');
+                this.connections.splice(idx, 1);
             } else {
                 ui.writeLog('Connection ' + connection.id + ' was already closed (!!???).');
             }
@@ -96,5 +96,14 @@ module.exports = {
                 connection.disconnect();
             } catch (e) { }
         }.bind(this));
+    },
+
+    debugConns: function () {
+        var txt = '';
+        for (var i = 0; i < this.connections.length; i++) {
+            var connection = this.connections[i];
+            txt += ' [Conn ' + connection.id + ' at index ' + i + ', ' + (connection.authenticated ? 'authed' : 'guest') + '] ';
+        }
+        ui.writeLog(txt);
     }
 };
