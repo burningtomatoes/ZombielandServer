@@ -2,13 +2,25 @@ var router = require('../router.js');
 var opcodes = require('../opcodes.js');
 
 var Login = {
-    sendResponse: function (connection, error) {
+    sendErrorResponse: function (connection, error) {
         var data = {
-            op: opcodes.LOGIN_RESULT,
+            op: opcodes.LOGIN_RESULT_ERROR,
             msg: error
         };
 
-        net.sendTo(connection.id, data);
+        connection.emit('data', data);
+    },
+
+    sendCompleteResponse: function (connection, userObj) {
+        var data = {
+            op: opcodes.LOGIN_RESULT_SUCCESS,
+            user: {
+                id: userObj.id,
+                username: userObj.username
+            }
+        };
+
+        connection.emit('data', data);
     },
 
     handleLogin: function (connection, data) {
@@ -26,12 +38,12 @@ var Login = {
                 var user = result[0];
 
                 if (user.password !== password) {
-                    Login.sendResponse(connection, 'Invalid password.');
+                    Login.sendErrorResponse(connection, 'Invalid password.');
                     return;
                 }
 
                 if (user.banned) {
-                    Login.sendResponse(connection, 'You have been banned.');
+                    Login.sendErrorResponse(connection, 'You have been banned.');
                     return;
                 }
 
@@ -64,10 +76,14 @@ var Login = {
     completeAuthentication: function (connection, userObj) {
         ui.writeLog('Connection ' + connection.id + ' has authenticated as ' + userObj.username + '.');
 
-        this.sendResponse(connection, 'You win.');
+        this.sendErrorResponse(connection, 'You win.');
 
         connection.authenticated = true;
         connection.user = userObj;
+
+        db.connection.query('UPDATE players SET date_last_login = ? WHERE id = ?', [new Date(), userObj.id]);
+
+        this.sendCompleteResponse(connection, userObj);
     }
 };
 
