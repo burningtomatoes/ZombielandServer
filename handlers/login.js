@@ -97,6 +97,9 @@ var Login = {
 
         // Send the OK response so the client will join the game properly now
         this.sendCompleteResponse(connection, userObj);
+
+        // Broadcast new player count to the world
+        net.sendPlayerCount();
     }
 };
 

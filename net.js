@@ -25,6 +25,19 @@ module.exports = {
         ui.writeLog('Ready to accept WebSocket connections.');
     },
 
+    sendPlayerCount: function (target) {
+        var payload = {
+            op: opcodes.PLAYER_COUNT,
+            count: this.getPlayerCount()
+        };
+
+        if (target != null) {
+            target.emit('data', payload);
+        } else {
+            this.broadcast(payload);
+        }
+    },
+
     generateClientId: function () {
         return this.idGenerator++;
     },
@@ -33,7 +46,7 @@ module.exports = {
         for (var i = 0; i < this.connections.length; i++) {
             var connection = this.connections[i];
 
-            if (connection == source) {
+            if (source != null && connection === source) {
                 continue;
             }
 
@@ -66,13 +79,25 @@ module.exports = {
         return null;
     },
 
+    getPlayerCount: function () {
+        var total = 0;
+        for (var i = 0; i < this.connections.length; i++) {
+            var connection = this.connections[i];
+
+            if (connection.authenticated) {
+                total++;
+            }
+        }
+        return total;
+    },
+
     handleConnection: function (connection) {
         this.connections.push(connection);
 
         connection.authenticated = false;
         connection.user = null;
 
-        ui.writeLog('Connection ' + connection.id + ' has opened.');
+        this.sendPlayerCount(connection);
 
         connection.on('data', function (d) {
             router.route(this, connection, d);
@@ -85,10 +110,8 @@ module.exports = {
 
             // If we have found it, then remove it from our collection.
             if (idx >= 0) {
-                ui.writeLog('Connection ' + connection.id + ' has closed [splice ' + idx + '].');
                 this.connections.splice(idx, 1);
-            } else {
-                ui.writeLog('Connection ' + connection.id + ' was already closed (!!???).');
+                net.sendPlayerCount();
             }
 
             // Try to close this connection if we can, to ensure it really is dead.
@@ -96,14 +119,5 @@ module.exports = {
                 connection.disconnect();
             } catch (e) { }
         }.bind(this));
-    },
-
-    debugConns: function () {
-        var txt = '';
-        for (var i = 0; i < this.connections.length; i++) {
-            var connection = this.connections[i];
-            txt += ' [Conn ' + connection.id + ' at index ' + i + ', ' + (connection.authenticated ? 'authed' : 'guest') + '] ';
-        }
-        ui.writeLog(txt);
     }
 };
