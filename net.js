@@ -54,8 +54,23 @@ module.exports = {
         }
     },
 
+    getConnectionByUid: function (userId) {
+        for (var i = 0; i < this.connections.length; i++) {
+            var connection = this.connections[i];
+
+            if (connection.authenticated && connection.user.id === userId) {
+                return connection;
+            }
+        }
+
+        return null;
+    },
+
     handleConnection: function (connection) {
         this.connections.push(connection);
+
+        connection.authenticated = false;
+        connection.user = null;
 
         ui.writeLog('Connection ' + connection.id + ' has opened.');
 
@@ -72,6 +87,8 @@ module.exports = {
             if (idx >= 0) {
                 ui.writeLog('Connection ' + connection.id + ' has closed.');
                 this.connections.splice(idx, connection);
+            } else {
+                ui.writeLog('Connection ' + connection.id + ' was already closed (!!???).');
             }
 
             // Try to close this connection if we can, to ensure it really is dead.

@@ -78,15 +78,24 @@ var Login = {
     },
 
     completeAuthentication: function (connection, userObj) {
-        ui.writeLog('Connection ' + connection.id + ' has authenticated as ' + userObj.username + '.');
+        ui.writeLog('Connection ' + connection.id + ' has authenticated as ' + userObj.username + ' (#' + userObj.id + ').');
 
-        this.sendErrorResponse(connection, 'You win.');
+        // Disconnect old connections as the same user (prevent double login)
+        var oldConnection = net.getConnectionByUid(userObj.id);
 
+        if (oldConnection != null) {
+            ui.writeLog('Disconnecting old connection ' + oldConnection.id + ' authenticated as user ' + userObj.id + '...');
+            oldConnection.disconnect();
+        }
+
+        // Mark this connection as authenticated
         connection.authenticated = true;
         connection.user = userObj;
 
+        // Update the last_login timestamp
         db.connection.query('UPDATE players SET date_last_login = ? WHERE id = ?', [new Date(), userObj.id]);
 
+        // Send the OK response so the client will join the game properly now
         this.sendCompleteResponse(connection, userObj);
     }
 };
