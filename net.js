@@ -1,0 +1,86 @@
+var nodeStatic = require('node-static');
+var http = require('http');
+var file = new (nodeStatic.Server)();
+var ui = require('./ui.js');
+var config = require('./config.js');
+var router = require('./router.js');
+
+module.exports = {
+    app: null,
+    io: null,
+
+    connections: [],
+
+    idGenerator: null,
+
+    start: function (port) {
+        ui.writeLog('Setting up HTTP listener on port ' + port + '...');
+
+        this.app = http.createServer(function (req, res) {
+            file.serve(req, res);
+        }).listen(port);
+
+        this.io = require('socket.io').listen(this.app);
+        this.io.sockets.on('connection', this.handleConnection.bind(this));
+
+        this.connections = [];
+
+        ui.writeLog('Ready to accept WebSocket connections.');
+    },
+
+    generateClientId: function () {
+        return this.idGenerator++;
+    },
+
+    broadcast: function (op, data, source) {
+        for (var i = 0; i < this.connections.length; i++) {
+            var connection = this.connections[i];
+
+            if (connection == source) {
+                continue;
+            }
+
+            try {
+                connection.emit(op, data);
+            } catch (e) { }
+        }
+    },
+
+    sendTo: function (connectionId, op, data) {
+        for (var i = 0; i < this.connections.length; i++) {
+            var connection = this.connections[i];
+
+            if (connection.id === connectionId) {
+                connection.emit(op, data);
+                break;
+            }
+        }
+    },
+
+    handleConnection: function (connection) {
+        this.connections.push(connection);
+
+        ui.writeLog('Connection ' + connection.id + ' has opened.');
+
+        connection.on('data', function (d) {
+            router.route(this, connection, d);
+        }.bind(this));
+
+        connection.on('disconnect', function () {
+            // A connection has been closed, look it up in our local copy of active connections.
+            // Due to a weird socket.io bug, disconnect is sometimes called twice for the same connection...
+            var idx = this.connections.indexOf(connection);
+
+            // If we have found it, then remove it from our collection.
+            if (idx >= 0) {
+                ui.writeLog('Connection ' + connection.id + ' has closed.');
+                this.connections.splice(idx, connection);
+            }
+
+            // Try to close this connection if we can, to ensure it really is dead.
+            try {
+                connection.disconnect();
+            } catch (e) { }
+        }.bind(this));
+    }
+};
