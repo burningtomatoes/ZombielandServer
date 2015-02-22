@@ -1,4 +1,5 @@
 function User(connection, dbData) {
+    this.id = dbData.id;
     this.connection = connection;
     this.dbData = dbData;
     this.entity = null;
