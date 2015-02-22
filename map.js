@@ -31,6 +31,10 @@ Map.prototype.add = function (entity) {
 Map.prototype.remove = function (entity) {
     var idx = this.entitites.indexOf(entity);
 
+    if (entity.isPlayer()) {
+        entity.connection.user.entity = null;
+    }
+
     if (idx == -1) {
         return false;
     }
@@ -61,7 +65,7 @@ Map.prototype.sendEntityList = function (connectionTarget) {
 
     for (var i = 0; i < this.entitites.length; i++) {
         var entity = this.entitites[i];
-        payload.entities.push(entity.serialize());
+        payload.e.push(entity.serialize());
     }
 
     connectionTarget.emit('data', payload);

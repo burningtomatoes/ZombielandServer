@@ -112,6 +112,10 @@ module.exports = {
             if (idx >= 0) {
                 this.connections.splice(idx, 1);
                 net.sendPlayerCount();
+
+                if (connection.authenticated) {
+                    connection.user.onDisconnect();
+                }
             }
 
             // Try to close this connection if we can, to ensure it really is dead.

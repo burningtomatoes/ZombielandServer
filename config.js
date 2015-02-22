@@ -8,5 +8,11 @@ module.exports = {
         user: 'zombieland',
         password: 'zomb123',
         database: 'zombieland'
+    },
+
+    startPos: {
+        map: 1,
+        posX: 20,
+        posY: 20
     }
 };

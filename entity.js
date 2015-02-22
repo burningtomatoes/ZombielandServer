@@ -1,5 +1,5 @@
-function Entity(id, connection) {
-    this.id = id;
+function Entity(connection) {
+    this.id = null;
     this.connection = connection;
     this.posX = 0;
     this.posY = 0;

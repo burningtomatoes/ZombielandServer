@@ -22,5 +22,17 @@ module.exports = {
 
         this.ready = true;
         ui.writeLog('Loaded ' + this.maps.length + ' maps.');
+    },
+
+    getMap: function (id) {
+        for (var i = 0; i < this.maps.length; i++) {
+            var map = this.maps[i];
+
+            if (map.id === id) {
+                return map;
+            }
+        }
+
+        return null;
     }
 };

@@ -95,7 +95,7 @@ var Login = {
 
         // Mark this connection as authenticated
         connection.authenticated = true;
-        connection.user = userObj;
+        connection.user = new User(connection, userObj);
 
         // Update the last_login timestamp
         db.connection.query('UPDATE players SET date_last_login = ? WHERE id = ?', [new Date(), userObj.id]);
@@ -106,7 +106,8 @@ var Login = {
         // Broadcast new player count to the world
         net.sendPlayerCount();
 
-        // TODO If this is a brand new player without a current map,
+        // Let the User class handle the next steps
+        connection.user.onLogin();
     }
 };
 
