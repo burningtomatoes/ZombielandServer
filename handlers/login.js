@@ -36,6 +36,11 @@ var Login = {
             return;
         }
 
+        if (!mapManager.ready) {
+            Login.sendErrorResponse(connection, 'The world is still starting up, one minute please...');
+            return;
+        }
+
         db.connection.query('SELECT * FROM players WHERE username = ? LIMIT 1', [data.username], function (err, result) {
             if (result.length == 1) {
                 // User already exists, we are running a log in attempt
@@ -78,7 +83,7 @@ var Login = {
     },
 
     completeAuthentication: function (connection, userObj) {
-        ui.writeLog('Connection ' + connection.id + ' has authenticated as ' + userObj.username + ' (#' + userObj.id + ').');
+        ui.writeLog('Connection ' + connection.id + ' has ' + (userObj.pos_map_id == null ? 'registered' : 'logged in') + ' as ' + userObj.username + ' (#' + userObj.id + ').');
 
         // Disconnect old connections as the same user (prevent double login)
         var oldConnection = net.getConnectionByUid(userObj.id);
