@@ -6,5 +6,7 @@ module.exports = {
     ENTITY_LIST: 5,
     ENTITY_ADD: 6,
     ENTITY_REMOVE: 7,
-    ENTITY_TELEPORT: 8
+    ENTITY_TELEPORT: 8,
+    CLIENT_MOVE_UPDATE: 9,
+    SERVER_MOVE_UPDATE: 10
 };

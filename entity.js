@@ -4,6 +4,8 @@ function Entity(connection) {
     this.posX = 0;
     this.posY = 0;
     this.map = null;
+    this.moving = false;
+    this.rotation = 0;
 }
 
 Entity.prototype.isPlayer = function () {
@@ -18,6 +20,20 @@ Entity.prototype.serialize = function () {
         pX: this.posX,
         pY: this.posY
     };
+};
+
+Entity.prototype.canMoveTo = function (x, y) {
+    if (x < 0 || y < 0) {
+        // Can not move outside map top bounds
+        console.log('block move: x or y lower than zero');
+        return true;
+    }
+
+    // TODO Speedhack check
+    // TODO SS Collision detection with map features (not entities, no time for that shit)
+    // TODO SS Map outer boundary detection
+
+    return true;
 };
 
 module.exports = Entity;
