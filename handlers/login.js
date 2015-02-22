@@ -100,6 +100,8 @@ var Login = {
 
         // Broadcast new player count to the world
         net.sendPlayerCount();
+
+        // TODO If this is a brand new player without a current map,
     }
 };
 

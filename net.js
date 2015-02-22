@@ -27,7 +27,7 @@ module.exports = {
 
     sendPlayerCount: function (target) {
         var payload = {
-            op: opcodes.PLAYER_COUNT,
+            op: opcodes.GLOB_PLAYER_COUNT,
             count: this.getPlayerCount()
         };
 

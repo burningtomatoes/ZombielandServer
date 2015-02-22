@@ -2,5 +2,9 @@ module.exports = {
     LOGIN: 1,
     LOGIN_RESULT_ERROR: 2,
     LOGIN_RESULT_SUCCESS: 3,
-    PLAYER_COUNT: 4
+    GLOB_PLAYER_COUNT: 4,
+    ENTITY_LIST: 5,
+    ENTITY_ADD: 6,
+    ENTITY_REMOVE: 7,
+    ENTITY_TELEPORT: 8
 };
