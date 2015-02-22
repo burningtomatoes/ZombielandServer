@@ -83,7 +83,7 @@ Map.prototype.sendEntityAdd = function (entity) {
 Map.prototype.sendEntityRemove = function (entity) {
     var payload = {
         op: opcodes.ENTITY_REMOVE,
-        id: entity.id
+        i: entity.id
     };
 
     this.broadcast(payload, entity);
