@@ -27,7 +27,7 @@ User.prototype.removeFromMap = function () {
 };
 
 User.prototype.createEntity = function () {
-    var entity = new Entity(this.connection);
+    var entity = new Entity(this.connection, this.dbData.username);
     entity.posX = this.posX;
     entity.posY = this.posY;
     return entity;

@@ -1,5 +1,6 @@
-function Entity(connection) {
+function Entity(connection, name) {
     this.id = null;
+    this.name = name == null || name.length == 0 ? '???' : name;
     this.connection = connection;
     this.posX = 0;
     this.posY = 0;
@@ -18,7 +19,8 @@ Entity.prototype.serialize = function () {
         uid: this.isPlayer() ? this.connection.user.id : 0,
         ip: this.isPlayer ? 1 : 0,
         pX: this.posX,
-        pY: this.posY
+        pY: this.posY,
+        nm: this.name
     };
 };
 
