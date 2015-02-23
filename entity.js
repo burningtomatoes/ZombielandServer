@@ -20,6 +20,7 @@ Entity.prototype.serialize = function () {
         ip: this.isPlayer ? 1 : 0,
         pX: this.posX,
         pY: this.posY,
+        pR: this.rotation,
         nm: this.name
     };
 };
