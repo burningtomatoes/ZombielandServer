@@ -12,7 +12,7 @@ module.exports = {
 
     startPos: {
         map: 1,
-        posX: 20,
-        posY: 20
+        posX: 200,
+        posY: 200
     }
 };
