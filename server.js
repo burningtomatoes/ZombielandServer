@@ -10,6 +10,9 @@ GLOBAL.Map = require('./map.js');
 GLOBAL.Entity = require('./entity.js');
 GLOBAL.User = require('./user.js');
 
+var Chance = require('chance');
+GLOBAL.chance = new Chance();
+
 ui.printWelcome();
 db.connect();
 mapManager.init();

@@ -10,14 +10,18 @@ function Map(id, nameInternal, namePublic) {
 
 Map.prototype.update = function () {
     var zombieCount = this.zombies.length;
-    var shouldSpawnZombie = Math.random() <= 0.5;
+    var shouldSpawnZombie = chance.bool();
 
     if (zombieCount < ZOMBIE_LIMIT && shouldSpawnZombie) {
         var zombie = new Entity();
         zombie.isZombie = true;
-        zombie.posX = 25 + (Math.random() * 1000);
-        zombie.posY = 25 + (Math.random() * 1000);
+
+        zombie.posX = chance.integer({ min: 1, max: 3200 });
+        zombie.posY = chance.integer({ min: 1, max: 3200 });
+        zombie.rotation = chance.integer({ min: 0, max: 360 });
         zombie.name = '';
+
+        this.zombies.push(zombie);
         this.add(zombie);
     }
 };
