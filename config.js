@@ -14,5 +14,9 @@ module.exports = {
         map: 1,
         posX: 200,
         posY: 200
-    }
+    },
+
+    mapRepo: 'http://localhost:63342/Zombieland/assets/maps',
+
+    TileSize: 32
 };

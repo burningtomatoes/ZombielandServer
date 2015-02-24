@@ -39,16 +39,46 @@ Entity.prototype.serialize = function () {
     };
 };
 
+Entity.prototype.getRect = function (overrideX, overrideY) {
+    var x = this.posX;
+    var y = this.posY;
+
+    if (overrideX != null) {
+        x = overrideX;
+    }
+
+    if (overrideY != null) {
+        y = overrideY;
+    }
+
+    var w = 32;
+    var h = 32;
+
+    var margin = 6;
+
+    var rect = {
+        left: x,
+        top: y + 6,
+        height: h - margin,
+        width: w - margin
+    };
+    rect.bottom = rect.top + rect.height;
+    rect.right = rect.left + rect.width;
+    return rect;
+};
+
 Entity.prototype.canMoveTo = function (x, y) {
-    if (x < 0 || y < 0) {
-        // Can not move outside map top bounds
-        console.log('block move: x or y lower than zero');
-        return true;
+    if (x < 0 || y < 0 || x > this.map.widthPx || y > this.map.heightPx) {
+        return false;
+    }
+
+    var projectedRect = this.getRect(x, y);
+
+    if (this.map.isRectBlocked(projectedRect, this)) {
+        return false;
     }
 
     // TODO Speedhack check
-    // TODO SS Collision detection with map features (not entities, no time for that shit)
-    // TODO SS Map outer boundary detection
 
     return true;
 };

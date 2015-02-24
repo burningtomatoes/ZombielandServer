@@ -13,6 +13,8 @@ GLOBAL.User = require('./user.js');
 var Chance = require('chance');
 GLOBAL.chance = new Chance();
 
+GLOBAL.Utils = require('./utils.js');
+
 ui.printWelcome();
 db.connect();
 mapManager.init();

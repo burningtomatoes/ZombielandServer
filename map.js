@@ -4,6 +4,12 @@ function Map(id, nameInternal, namePublic) {
     this.id = id;
     this.nameInternal = nameInternal;
     this.namePublic = namePublic;
+    this.widthTiles = 0;
+    this.heightTiles = 0;
+    this.widthPx = 0;
+    this.heightPx = 0;
+    this.blockedRects = [];
+    this.entities = [];
 
     this.clear();
 }
@@ -16,18 +22,48 @@ Map.prototype.update = function () {
         var zombie = new Entity();
         zombie.isZombie = true;
 
-        zombie.posX = chance.integer({ min: 1, max: 3200 });
-        zombie.posY = chance.integer({ min: 1, max: 3200 });
+        zombie.posX = chance.integer({ min: 1, max: this.widthPx });
+        zombie.posY = chance.integer({ min: 1, max: this.heightPx });
         zombie.rotation = chance.integer({ min: 0, max: 360 });
         zombie.name = '';
 
-        this.zombies.push(zombie);
-        this.add(zombie);
+        if (!this.isRectBlocked(zombie.getRect(), zombie)) {
+            this.zombies.push(zombie);
+            this.add(zombie);
+        }
     }
 };
 
+Map.prototype.isRectBlocked = function (ourRect,  ignoreEntity) {
+    var blockedRectsLength = this.blockedRects.length;
+
+    for (var i = 0; i < blockedRectsLength; i++) {
+        if (Utils.rectIntersects(ourRect, this.blockedRects[i])) {
+            return true;
+        }
+    }
+
+    var entitiesLength = this.entities.length;
+
+    for (var k = 0; k < entitiesLength; k++) {
+        var entity = this.entities[k];
+
+        if (!entity.causesCollision || entity === ignoreEntity) {
+            continue;
+        }
+
+        var theirRect = entity.getRect();
+
+        if (Utils.rectIntersects(ourRect, theirRect)) {
+            return true;
+        }
+    }
+
+    return false;
+};
+
 Map.prototype.clear = function () {
-    this.entitites = [];
+    this.entities = [];
     this.zombies = [];
     this.idGenerator = 0;
 };
@@ -40,13 +76,13 @@ Map.prototype.add = function (entity) {
     entity.map = this;
     entity.id = this.generateId();
 
-    this.entitites.push(entity);
+    this.entities.push(entity);
 
     this.sendEntityAdd(entity);
 };
 
 Map.prototype.remove = function (entity) {
-    var idx = this.entitites.indexOf(entity);
+    var idx = this.entities.indexOf(entity);
 
     if (entity.isPlayer()) {
         entity.connection.user.entity = null;
@@ -56,13 +92,13 @@ Map.prototype.remove = function (entity) {
         return false;
     }
 
-    this.entitites.splice(idx, 1);
+    this.entities.splice(idx, 1);
     this.sendEntityRemove(entity);
 };
 
 Map.prototype.broadcast = function (message, ignoreEntity) {
-    for (var i = 0; i < this.entitites.length; i++) {
-        var entity = this.entitites[i];
+    for (var i = 0; i < this.entities.length; i++) {
+        var entity = this.entities[i];
 
         if (ignoreEntity != null && entity === ignoreEntity) {
             continue;
@@ -80,8 +116,8 @@ Map.prototype.sendEntityList = function (connectionTarget) {
         e: []
     };
 
-    for (var i = 0; i < this.entitites.length; i++) {
-        var entity = this.entitites[i];
+    for (var i = 0; i < this.entities.length; i++) {
+        var entity = this.entities[i];
         payload.e.push(entity.serialize());
     }
 
