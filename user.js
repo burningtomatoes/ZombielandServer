@@ -6,14 +6,27 @@ function User(connection, dbData) {
     this.posY = this.dbData.pos_y;
     this.posX = this.dbData.pos_x;
     this.lastMapId = this.dbData.pos_map_id;
+    this.outfit = this.dbData.outfit;
+    this.head = this.dbData.head;
 }
 
+User.prototype.generateLook = function () {
+    var availableHeads = ['1'];
+    var availableBodies = ['1', '2'];
+
+    this.head = chance.pick(availableHeads);
+    this.outfit = chance.pick(availableBodies);
+};
+
 User.prototype.onLogin = function () {
-    if (this.lastMapId == null) {
+    if (this.lastMapId == null || this.outfit == null || this.head == null) {
         // We are a new (or broken) user, join the initial map
         this.posX = config.startPos.posX;
         this.posY = config.startPos.posY;
         this.lastMapId = config.startPos.map;
+
+        // And generate a random look for us
+        this.generateLook();
     }
 
     this.joinMap(this.lastMapId);
@@ -30,6 +43,8 @@ User.prototype.createEntity = function () {
     var entity = new Entity(this.connection, this.dbData.username);
     entity.posX = this.posX;
     entity.posY = this.posY;
+    entity.head = this.head;
+    entity.outfit = this.outfit;
     return entity;
 };
 
@@ -75,7 +90,9 @@ User.prototype.saveToDb = function () {
     var updateObject = {
         pos_map_id: this.lastMapId,
         pos_x: this.posX,
-        pos_y: this.posY
+        pos_y: this.posY,
+        outfit: this.outfit,
+        head: this.head
     };
 
     db.connection.query('UPDATE players SET ? WHERE id = ? LIMIT 1', [updateObject, this.dbData.id]);

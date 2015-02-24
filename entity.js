@@ -11,6 +11,8 @@ function Entity(connection, name) {
     this.healthMax = 100;
     this.joining = false;
     this.isZombie = false;
+    this.outfit = '1';
+    this.head = '1';
 }
 
 Entity.prototype.isZombie = function () {
@@ -35,7 +37,9 @@ Entity.prototype.serialize = function () {
         pR: this.rotation,
         nm: this.name,
         hc: this.healthCurrent,
-        hm: this.healthMax
+        hm: this.healthMax,
+        ob: this.outfit,
+        oh: this.head
     };
 };
 
