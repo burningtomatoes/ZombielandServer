@@ -10,7 +10,16 @@ function Entity(connection, name) {
     this.healthCurrent = 100;
     this.healthMax = 100;
     this.joining = false;
+    this.isZombie = false;
 }
+
+Entity.prototype.isZombie = function () {
+    return this.isZombie;
+};
+
+Entity.prototype.isNpc = function () {
+    return this.connection == null;
+};
 
 Entity.prototype.isPlayer = function () {
     return this.connection != null;

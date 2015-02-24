@@ -1,3 +1,5 @@
+var ZOMBIE_LIMIT = 20;
+
 function Map(id, nameInternal, namePublic) {
     this.id = id;
     this.nameInternal = nameInternal;
@@ -6,8 +8,23 @@ function Map(id, nameInternal, namePublic) {
     this.clear();
 }
 
+Map.prototype.update = function () {
+    var zombieCount = this.zombies.length;
+    var shouldSpawnZombie = Math.random() <= 0.5;
+
+    if (zombieCount < ZOMBIE_LIMIT && shouldSpawnZombie) {
+        var zombie = new Entity();
+        zombie.isZombie = true;
+        zombie.posX = 25 + (Math.random() * 1000);
+        zombie.posY = 25 + (Math.random() * 1000);
+        zombie.name = '';
+        this.add(zombie);
+    }
+};
+
 Map.prototype.clear = function () {
     this.entitites = [];
+    this.zombies = [];
     this.idGenerator = 0;
 };
 

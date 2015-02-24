@@ -8,6 +8,15 @@ module.exports = {
         db.connection.query('SELECT * FROM maps', function (err, result) {
             this.processMaps(result);
         }.bind(this));
+
+        setInterval(this.updateMaps.bind(this), 1000);
+    },
+
+    updateMaps: function () {
+        for (var i = 0; i < this.maps.length; i++) {
+            var map = this.maps[i];
+            map.update();
+        }
     },
 
     processMaps: function (dbResult) {
