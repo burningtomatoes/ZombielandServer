@@ -26,7 +26,7 @@ Map.prototype.update = function () {
         zombie.posY = chance.integer({ min: 1, max: this.heightPx });
         zombie.rotation = chance.integer({ min: 0, max: 360 });
         zombie.head = 'z_1';
-        zombie.body = '1';
+        zombie.outfit = 'z_1';
         zombie.name = '';
 
         if (!this.isRectBlocked(zombie.getRect(), zombie)) {
