@@ -7,6 +7,9 @@ function Entity(connection, name) {
     this.map = null;
     this.moving = false;
     this.rotation = 0;
+    this.healthCurrent = 100;
+    this.healthMax = 100;
+    this.joining = false;
 }
 
 Entity.prototype.isPlayer = function () {
@@ -21,7 +24,9 @@ Entity.prototype.serialize = function () {
         pX: this.posX,
         pY: this.posY,
         pR: this.rotation,
-        nm: this.name
+        nm: this.name,
+        hc: this.healthCurrent,
+        hm: this.healthMax
     };
 };
 

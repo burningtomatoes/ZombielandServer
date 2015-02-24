@@ -21,10 +21,6 @@ Map.prototype.add = function (entity) {
 
     this.entitites.push(entity);
 
-    if (entity.isPlayer()) {
-        this.sendEntityList(entity.connection);
-    }
-
     this.sendEntityAdd(entity);
 };
 

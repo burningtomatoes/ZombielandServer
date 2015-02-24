@@ -5,7 +5,7 @@ var MovementUpdate = {
     handleMove: function (connection, data) {
         var entity = connection.user.entity;
 
-        if (entity == null || entity.id !== data.i || !entity.isPlayer()) {
+        if (entity == null || entity.joining || entity.id !== data.i || !entity.isPlayer()) {
             return;
         }
 

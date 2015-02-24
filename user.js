@@ -40,9 +40,16 @@ User.prototype.joinMap = function (id) {
 
     if (map != null) {
         var playerEntity = this.createEntity();
+        playerEntity.joining = true;
+
         this.entity = playerEntity;
 
         map.add(playerEntity);
+
+        this.connection.emit('data', {
+            op: opcodes.LOAD_MAP,
+            m: map.nameInternal
+        });
 
         this.saveToDb();
         return true;

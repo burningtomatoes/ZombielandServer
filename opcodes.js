@@ -10,5 +10,7 @@ module.exports = {
     CLIENT_MOVE_UPDATE: 9,
     SERVER_MOVE_UPDATE: 10,
     CLIENT_CHAT: 11,
-    SERVER_CHAT: 12
+    SERVER_CHAT: 12,
+    LOAD_MAP: 13,
+    MAP_LOADED: 14
 };
