@@ -109,6 +109,12 @@ Map.prototype.remove = function (entity) {
 
     this.entities.splice(idx, 1);
     this.sendEntityRemove(entity);
+
+    var zIdx = this.zombies.indexOf(entity);
+
+    if (zIdx >= 0) {
+        this.zombies.splice(zIdx, 1);
+    }
 };
 
 Map.prototype.broadcast = function (message, ignoreEntity) {
