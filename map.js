@@ -56,6 +56,29 @@ Map.prototype.isRectBlocked = function (ourRect,  ignoreEntity) {
     return false;
 };
 
+Map.prototype.getEntitiesInRect = function (ourRect, ignoreEntity) {
+    var entitiesLength = this.entities.length;
+    var entities = [];
+
+    for (var k = 0; k < entitiesLength; k++) {
+        var entity = this.entities[k];
+
+        if (entity === ignoreEntity) {
+            continue;
+        }
+
+        var theirRect = entity.getRect(entity.posX, entity.posY);
+
+        if (Utils.rectIntersects(ourRect, theirRect)) {
+            entities.push(entity);
+        } else {
+            console.log('no intersect', theirRect);
+        }
+    }
+
+    return entities;
+};
+
 Map.prototype.clear = function () {
     this.entities = [];
     this.zombies = [];

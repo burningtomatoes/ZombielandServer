@@ -12,7 +12,7 @@ module.exports = {
             this.processMaps(result);
         }.bind(this));
 
-        setInterval(this.updateMaps.bind(this), 1000);
+        setInterval(this.updateMaps.bind(this), 500);
     },
 
     updateMaps: function () {

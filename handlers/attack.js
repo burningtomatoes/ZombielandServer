@@ -9,6 +9,7 @@ var Attack = {
             return;
         }
 
+        entity.doAttack();
         entity.broadcastAttack();
     }
 };

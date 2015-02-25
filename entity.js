@@ -123,6 +123,23 @@ Entity.prototype.serialize = function () {
     };
 };
 
+Entity.prototype.doAttack = function () {
+    var affectedEntities = this.map.getEntitiesInRect(this.getAttackRect(5), this);
+    console.log('attack affected entities', affectedEntities);
+};
+
+Entity.prototype.getAttackRect = function (range) {
+    var xChange = this.movementSpeed * Math.cos(this.rotation * Math.PI / 180);
+    var yChange = this.movementSpeed * Math.sin(this.rotation * Math.PI / 180);
+
+    xChange *= range;
+    yChange *= range;
+
+    var rect = this.getRect(this.posX + xChange, this.posY + yChange);
+    console.log(rect);
+    return rect;
+};
+
 Entity.prototype.getRect = function (overrideX, overrideY) {
     var x = this.posX;
     var y = this.posY;
