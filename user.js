@@ -69,13 +69,6 @@ User.prototype.joinMap = function (id) {
 
         map.add(playerEntity);
 
-        var infLoopKiller = 100;
-        while (!playerEntity.canMoveTo(playerEntity.posX, playerEntity.posY) && infLoopKiller > 0) {
-            playerEntity.posX += chance.integer({min: -32, max: 32});
-            playerEntity.posY += chance.integer({min: -32, max: 32});
-            infLoopKiller--;
-        }
-
         this.connection.emit('data', {
             op: opcodes.LOAD_MAP,
             m: map.nameInternal

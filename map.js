@@ -53,23 +53,6 @@ Map.prototype.isRectBlocked = function (ourRect,  ignoreEntity) {
         }
     }
 
-    var entitiesLength = this.entities.length;
-
-    for (var k = 0; k < entitiesLength; k++) {
-        var entity = this.entities[k];
-
-        if (!entity.causesCollision || entity === ignoreEntity) {
-            continue;
-        }
-
-        var aproxPos = entity.getAproxPosition();
-        var theirRect = entity.getRect(aproxPos.x, aproxPos.y);
-
-        if (Utils.rectIntersects(ourRect, theirRect)) {
-            return true;
-        }
-    }
-
     return false;
 };
 
