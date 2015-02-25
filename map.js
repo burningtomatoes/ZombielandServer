@@ -71,8 +71,6 @@ Map.prototype.getEntitiesInRect = function (ourRect, ignoreEntity) {
 
         if (Utils.rectIntersects(ourRect, theirRect)) {
             entities.push(entity);
-        } else {
-            console.log('no intersect', theirRect);
         }
     }
 

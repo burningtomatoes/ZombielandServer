@@ -123,9 +123,32 @@ Entity.prototype.serialize = function () {
     };
 };
 
+Entity.prototype.applyDamage = function (damage) {
+    this.healthCurrent -= damage;
+
+    console.log('DMG', damage);
+
+    if (this.healthCurrent <= 0) {
+        this.die();
+    }
+
+    this.broadcastDamage(damage);
+};
+
+Entity.prototype.die = function () {
+    // TODO DIE
+};
+
 Entity.prototype.doAttack = function () {
     var affectedEntities = this.map.getEntitiesInRect(this.getAttackRect(5), this);
-    console.log('attack affected entities', affectedEntities);
+
+    for (var i = 0; i < affectedEntities.length; i++) {
+        var entity = affectedEntities[i];
+        entity.applyDamage(chance.integer({
+            min: 8,
+            max: 16
+        }));
+    }
 };
 
 Entity.prototype.getAttackRect = function (range) {
@@ -136,7 +159,6 @@ Entity.prototype.getAttackRect = function (range) {
     yChange *= range;
 
     var rect = this.getRect(this.posX + xChange, this.posY + yChange);
-    console.log(rect);
     return rect;
 };
 
@@ -209,6 +231,16 @@ Entity.prototype.broadcastAttack = function () {
     this.map.broadcast({
         op: opcodes.SERVER_ATTACK,
         i: this.id
+    });
+};
+
+Entity.prototype.broadcastDamage = function (dmg) {
+    this.map.broadcast({
+        op: opcodes.DAMAGE_ENTITY,
+        i: this.id,
+        d: dmg,
+        c: this.healthCurrent,
+        m: this.healthMax
     });
 };
 

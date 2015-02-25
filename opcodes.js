@@ -14,5 +14,6 @@ module.exports = {
     LOAD_MAP: 13,
     MAP_LOADED: 14,
     CLIENT_ATTACK: 15,
-    SERVER_ATTACK: 16
+    SERVER_ATTACK: 16,
+    DAMAGE_ENTITY: 17
 };
