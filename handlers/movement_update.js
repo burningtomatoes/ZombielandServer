@@ -27,14 +27,7 @@ var MovementUpdate = {
             entity.rotation = reqRotation;
         }
 
-        entity.map.broadcast({
-            op: opcodes.SERVER_MOVE_UPDATE,
-            i: entity.id,
-            x: entity.posX,
-            y: entity.posY,
-            r: entity.rotation,
-            m: entity.moving ? 1 : 0
-        });
+        entity.broadcastMovementUpdate();
     }
 };
 

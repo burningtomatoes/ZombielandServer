@@ -20,29 +20,67 @@ function Entity(connection, name) {
     this.aiAction = 'none';
 }
 
-Entity.prototype.getAproxPosition = function () {
-    if (!this.moving) {
-        return {
-            x: this.posX,
-            y: this.posY
-        };
+Entity.prototype.update = function () {
+    var sendMovementUpdate = false;
+
+    // Update player positioning
+    if (this.moving) {
+        var timeSinceUpdate = Date.now() - this.movementStart;
+        timeSinceUpdate /= 1000;
+
+        var framesPassed = timeSinceUpdate * 60;
+
+        var xChange = this.movementSpeed * Math.cos(this.rotation * Math.PI / 180);
+        var yChange = this.movementSpeed * Math.sin(this.rotation * Math.PI / 180);
+
+        xChange *= framesPassed;
+        yChange *= framesPassed;
+
+        var targetX = this.posX + xChange;
+        var targetY = this.posY + yChange;
+
+        if (!this.canMoveTo(targetX, targetY)) {
+            this.isMoving = false;
+        } else {
+            this.posX += xChange;
+            this.posY += yChange;
+        }
+
+        this.movementStart = Date.now();
+        sendMovementUpdate = true;
     }
 
-    var timeSinceStart = Date.now() - this.movementStart;
-    var framesPassed = (timeSinceStart / 1000) * 60;
-
-    var projectedX = this.posX + ((this.movementSpeed * Math.cos(this.rotation * Math.PI / 180)) * framesPassed);
-    var projectedY = this.posY + ((this.movementSpeed * Math.sin(this.rotation * Math.PI / 180)) * framesPassed);
-
-    return {
-        x: projectedX,
-        y: projectedY
-    };
-};
-
-Entity.prototype.update = function () {
+    // Zombie AI
     if (this.isZombie) {
+        if (chance.bool()) {
+            this.rotation += chance.integer({ min: -32, max: 32 });
 
+            if (this.rotation < 0) {
+                this.rotation += 360;
+            }
+
+            if (this.rotation > 360) {
+                this.rotation -= 360;
+            }
+
+            sendMovementUpdate = true;
+        }
+
+        if (!this.moving && chance.bool()) {
+            this.moving = true;
+            this.movementStart = Date.now();
+
+            sendMovementUpdate = true;
+        }
+        else if (this.moving && chance.bool()) {
+            this.moving = false;
+            sendMovementUpdate = true;
+        }
+    }
+
+    // Net sync movement
+    if (sendMovementUpdate) {
+        this.broadcastMovementUpdate();
     }
 };
 
@@ -113,6 +151,17 @@ Entity.prototype.canMoveTo = function (x, y) {
     // TODO Speedhack check
 
     return true;
+};
+
+Entity.prototype.broadcastMovementUpdate = function () {
+    this.map.broadcast({
+        op: opcodes.SERVER_MOVE_UPDATE,
+        i: this.id,
+        x: this.posX,
+        y: this.posY,
+        r: this.rotation,
+        m: this.moving ? 1 : 0
+    });
 };
 
 module.exports = Entity;
