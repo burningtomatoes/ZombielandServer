@@ -16,6 +16,7 @@ function Entity(connection, name) {
     this.movementSpeed = 2;
     this.movementStart = 0;
     this.weapon = null;
+    this.dead = false;
 
     this.aiAction = 'none';
 }
@@ -136,7 +137,16 @@ Entity.prototype.applyDamage = function (damage) {
 };
 
 Entity.prototype.die = function () {
-    // TODO DIE
+    this.dead = true;
+
+    if (this.isNpc()) {
+        this.map.remove(this);
+        return;
+    }
+
+    if (this.isPlayer()) {
+        this.connection.disconnect();
+    }
 };
 
 Entity.prototype.doAttack = function () {
