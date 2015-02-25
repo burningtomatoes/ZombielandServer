@@ -12,5 +12,7 @@ module.exports = {
     CLIENT_CHAT: 11,
     SERVER_CHAT: 12,
     LOAD_MAP: 13,
-    MAP_LOADED: 14
+    MAP_LOADED: 14,
+    CLIENT_ATTACK: 15,
+    SERVER_ATTACK: 16
 };

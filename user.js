@@ -53,6 +53,7 @@ User.prototype.createEntity = function () {
     entity.outfit = this.outfit;
     entity.healthCurrent = this.healthCurrent;
     entity.healthMax = this.healthMax;
+    entity.weapon = this.weapon;
     return entity;
 };
 

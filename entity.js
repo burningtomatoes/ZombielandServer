@@ -187,4 +187,11 @@ Entity.prototype.broadcastMovementUpdate = function () {
     });
 };
 
+Entity.prototype.broadcastAttack = function () {
+    this.map.broadcast({
+        op: opcodes.SERVER_ATTACK,
+        i: this.id
+    });
+};
+
 module.exports = Entity;
