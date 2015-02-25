@@ -29,7 +29,7 @@ User.prototype.onLogin = function () {
         this.lastMapId = config.startPos.map;
         this.healthCurrent = 100;
         this.healthMax = 100;
-        this.weapon = null;
+        this.weapon = 'knife';
 
         // And generate a random look for us
         this.generateLook();
