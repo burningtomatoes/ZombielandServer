@@ -55,14 +55,6 @@ Entity.prototype.update = function () {
         if (chance.bool()) {
             this.rotation += chance.integer({ min: -32, max: 32 });
 
-            if (this.rotation < 0) {
-                this.rotation += 360;
-            }
-
-            if (this.rotation > 360) {
-                this.rotation -= 360;
-            }
-
             sendMovementUpdate = true;
         }
 
@@ -76,6 +68,27 @@ Entity.prototype.update = function () {
             this.moving = false;
             sendMovementUpdate = true;
         }
+
+        var infLoopPrevention = 100;
+        var wiggleDirectionDown = chance.bool();
+        while (this.moving && !this.canMoveInDirection(this.rotation, 120) && infLoopPrevention > 0) {
+            if (wiggleDirectionDown) {
+                this.rotation += chance.integer({ min: -32, max: 0 });
+            } else {
+                this.rotation += chance.integer({ min: 0, max: 32 });
+            }
+
+            infLoopPrevention--;
+        }
+    }
+
+    // Round off rotation
+    if (this.rotation < 0) {
+        this.rotation += 360;
+    }
+
+    if (this.rotation > 360) {
+        this.rotation -= 360;
     }
 
     // Net sync movement
@@ -135,6 +148,16 @@ Entity.prototype.getRect = function (overrideX, overrideY) {
     rect.bottom = rect.top + rect.height;
     rect.right = rect.left + rect.width;
     return rect;
+};
+
+Entity.prototype.canMoveInDirection = function (direction, range) {
+    var xChange = this.movementSpeed * Math.cos(direction * Math.PI / 180);
+    var yChange = this.movementSpeed * Math.sin(direction * Math.PI / 180);
+
+    xChange *= range;
+    yChange *= range;
+
+    return this.canMoveTo(this.posX + xChange, this.posY + yChange);
 };
 
 Entity.prototype.canMoveTo = function (x, y) {
