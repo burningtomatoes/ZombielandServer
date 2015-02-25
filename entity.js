@@ -118,7 +118,8 @@ Entity.prototype.serialize = function () {
         hm: this.healthMax,
         ob: this.outfit,
         oh: this.head,
-        wp: this.weapon
+        wp: this.weapon,
+        mv: this.moving ? 1 : 0
     };
 };
 
