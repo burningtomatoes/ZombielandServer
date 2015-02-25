@@ -52,6 +52,8 @@ Entity.prototype.update = function () {
 
     // Zombie AI
     if (this.isZombie) {
+        this.doAttack();
+
         if (chance.bool()) {
             this.rotation += chance.integer({ min: -32, max: 32 });
 
@@ -125,8 +127,6 @@ Entity.prototype.serialize = function () {
 
 Entity.prototype.applyDamage = function (damage) {
     this.healthCurrent -= damage;
-
-    console.log('DMG', damage);
 
     if (this.healthCurrent <= 0) {
         this.die();
