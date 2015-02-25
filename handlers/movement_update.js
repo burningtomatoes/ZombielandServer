@@ -18,6 +18,7 @@ var MovementUpdate = {
             entity.posX = reqX;
             entity.posY = reqY;
             entity.moving = data.m == 1;
+            entity.movementStart = Date.now();
         }
 
         var reqRotation = parseInt(data.r);

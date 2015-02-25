@@ -28,11 +28,19 @@ Map.prototype.update = function () {
         zombie.head = 'z_1';
         zombie.outfit = 'z_1';
         zombie.name = '';
+        zombie.weapon = 'zombie';
 
         if (!this.isRectBlocked(zombie.getRect(), zombie)) {
             this.zombies.push(zombie);
             this.add(zombie);
         }
+    }
+
+    var entityCopy = this.entities.slice();
+
+    for (var i = 0; i < entityCopy.length; i++) {
+        var entity = entityCopy[i];
+        entity.update();
     }
 };
 
@@ -54,7 +62,8 @@ Map.prototype.isRectBlocked = function (ourRect,  ignoreEntity) {
             continue;
         }
 
-        var theirRect = entity.getRect();
+        var aproxPos = entity.getAproxPosition();
+        var theirRect = entity.getRect(aproxPos.x, aproxPos.y);
 
         if (Utils.rectIntersects(ourRect, theirRect)) {
             return true;

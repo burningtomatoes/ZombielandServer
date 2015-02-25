@@ -13,10 +13,37 @@ function Entity(connection, name) {
     this.isZombie = false;
     this.outfit = '1';
     this.head = '1';
+    this.movementSpeed = 2;
+    this.movementStart = 0;
+    this.weapon = null;
+
+    this.aiAction = 'none';
 }
 
-Entity.prototype.isZombie = function () {
-    return this.isZombie;
+Entity.prototype.getAproxPosition = function () {
+    if (!this.moving) {
+        return {
+            x: this.posX,
+            y: this.posY
+        };
+    }
+
+    var timeSinceStart = Date.now() - this.movementStart;
+    var framesPassed = (timeSinceStart / 1000) * 60;
+
+    var projectedX = this.posX + ((this.movementSpeed * Math.cos(this.rotation * Math.PI / 180)) * framesPassed);
+    var projectedY = this.posY + ((this.movementSpeed * Math.sin(this.rotation * Math.PI / 180)) * framesPassed);
+
+    return {
+        x: projectedX,
+        y: projectedY
+    };
+};
+
+Entity.prototype.update = function () {
+    if (this.isZombie) {
+
+    }
 };
 
 Entity.prototype.isNpc = function () {
@@ -39,7 +66,8 @@ Entity.prototype.serialize = function () {
         hc: this.healthCurrent,
         hm: this.healthMax,
         ob: this.outfit,
-        oh: this.head
+        oh: this.head,
+        wp: this.weapon
     };
 };
 

@@ -8,6 +8,9 @@ function User(connection, dbData) {
     this.lastMapId = this.dbData.pos_map_id;
     this.outfit = this.dbData.outfit;
     this.head = this.dbData.head;
+    this.weapon = this.dbData.weapon;
+    this.healthCurrent = this.dbData.health_now;
+    this.healthMax = this.dbData.health_max;
 }
 
 User.prototype.generateLook = function () {
@@ -24,6 +27,9 @@ User.prototype.onLogin = function () {
         this.posX = config.startPos.posX;
         this.posY = config.startPos.posY;
         this.lastMapId = config.startPos.map;
+        this.healthCurrent = 100;
+        this.healthMax = 100;
+        this.weapon = null;
 
         // And generate a random look for us
         this.generateLook();
@@ -45,6 +51,8 @@ User.prototype.createEntity = function () {
     entity.posY = this.posY;
     entity.head = this.head;
     entity.outfit = this.outfit;
+    entity.healthCurrent = this.healthCurrent;
+    entity.healthMax = this.healthMax;
     return entity;
 };
 
@@ -92,7 +100,10 @@ User.prototype.saveToDb = function () {
         pos_x: this.posX,
         pos_y: this.posY,
         outfit: this.outfit,
-        head: this.head
+        head: this.head,
+        health_now: this.healthCurrent,
+        health_max: this.healthMax,
+        weapon: this.weapon
     };
 
     db.connection.query('UPDATE players SET ? WHERE id = ? LIMIT 1', [updateObject, this.dbData.id]);
